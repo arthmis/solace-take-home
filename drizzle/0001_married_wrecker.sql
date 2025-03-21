@@ -1,0 +1,1 @@
+CREATE INDEX IF NOT EXISTS "specialties_search_index" ON "advocates" USING gin (jsonb_to_tsvector('english', "payload", '["string"]'));

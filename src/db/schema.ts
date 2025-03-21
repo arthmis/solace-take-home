@@ -1,6 +1,7 @@
 import { sql } from "drizzle-orm";
 import {
   pgTable,
+  index,
   integer,
   text,
   jsonb,
@@ -19,6 +20,9 @@ const advocates = pgTable("advocates", {
   yearsOfExperience: integer("years_of_experience").notNull(),
   phoneNumber: bigint("phone_number", { mode: "number" }).notNull(),
   createdAt: timestamp("created_at").default(sql`CURRENT_TIMESTAMP`),
-});
+},
+(advocates) => [
+  index('specialties_search_index').using('gin', sql`jsonb_to_tsvector('english', ${advocates.specialties}, '["string"]')`),
+]);
 
 export { advocates };
