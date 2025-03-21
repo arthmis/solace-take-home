@@ -1,45 +1,58 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import AdvocatesTable from "@/components/advocates_table";
+
+const specialties = [
+  "Bipolar",
+  "LGBTQ",
+  "Medication/Prescribing",
+  "Suicide History/Attempts",
+  "General Mental Health (anxiety, depression, stress, grief, life transitions)",
+  "Men's issues",
+  "Relationship Issues (family, friends, couple, etc)",
+  "Trauma & PTSD",
+  "Personality disorders",
+  "Personal growth",
+  "Substance use/abuse",
+  "Pediatrics",
+  "Women's issues (post-partum, infertility, family planning)",
+  "Chronic pain",
+  "Weight loss & nutrition",
+  "Eating disorders",
+  "Diabetic Diet and nutrition",
+  "Coaching (leadership, career, academic and wellness)",
+  "Life coaching",
+  "Obsessive-compulsive disorders",
+  "Neuropsychological evaluations & testing (ADHD testing)",
+  "Attention and Hyperactivity (ADHD)",
+  "Sleep issues",
+  "Schizophrenia and psychotic disorders",
+  "Learning disorders",
+  "Domestic abuse",
+];
 
 export default function Home() {
-  const [advocates, setAdvocates] = useState([]);
   const [filteredAdvocates, setFilteredAdvocates] = useState([]);
-
-  useEffect(() => {
-    console.log("fetching advocates...");
-    fetch("/api/advocates").then((response) => {
-      response.json().then((jsonResponse) => {
-        setAdvocates(jsonResponse.data);
-        setFilteredAdvocates(jsonResponse.data);
-      });
-    });
-  }, []);
+  const [selectedSpecialty, setSelectedSpecialty] = useState(specialties[0]);
 
   const onChange = (e) => {
     const searchTerm = e.target.value;
+    setSelectedSpecialty(searchTerm);
+  };
 
-    document.getElementById("search-term").innerHTML = searchTerm;
+  const search  = () => {
+    const searchParams = new URLSearchParams("");
+    searchParams.append("specialty", selectedSpecialty);
 
-    console.log("filtering advocates...");
-    const filteredAdvocates = advocates.filter((advocate) => {
-      return (
-        advocate.firstName.includes(searchTerm) ||
-        advocate.lastName.includes(searchTerm) ||
-        advocate.city.includes(searchTerm) ||
-        advocate.degree.includes(searchTerm) ||
-        advocate.specialties.includes(searchTerm) ||
-        advocate.yearsOfExperience.includes(searchTerm)
-      );
+    const searchUrl = new URL(`/api/search?${searchParams.toString()}`, "http://localhost:3000");
+
+    fetch(searchUrl).then((response) => {
+      response.json().then((jsonResponse) => {
+        setFilteredAdvocates(jsonResponse.data);
+      });
     });
-
-    setFilteredAdvocates(filteredAdvocates);
-  };
-
-  const onClick = () => {
-    console.log(advocates);
-    setFilteredAdvocates(advocates);
-  };
+  }
 
   return (
     <main style={{ margin: "24px" }}>
@@ -47,47 +60,22 @@ export default function Home() {
       <br />
       <br />
       <div>
-        <p>Search</p>
-        <p>
-          Searching for: <span id="search-term"></span>
-        </p>
-        <input style={{ border: "1px solid black" }} onChange={onChange} />
-        <button onClick={onClick}>Reset Search</button>
+        <form action={search}>
+          <label htmlFor="specialties">Select the type of medical service you need help with (required)</label>
+          <select value={selectedSpecialty} onChange={onChange} required name="specialties" id="specialties">
+            {specialties.map((specialty) => {
+              return (
+                <option key={specialty} value={specialty}>{specialty}</option>
+              )
+            })}
+          </select>
+          <button type="submit">Find Care</button>
+        </form>
       </div>
       <br />
       <br />
-      <table>
-        <thead>
-          <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>City</th>
-            <th>Degree</th>
-            <th>Specialties</th>
-            <th>Years of Experience</th>
-            <th>Phone Number</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredAdvocates.map((advocate) => {
-            return (
-              <tr>
-                <td>{advocate.firstName}</td>
-                <td>{advocate.lastName}</td>
-                <td>{advocate.city}</td>
-                <td>{advocate.degree}</td>
-                <td>
-                  {advocate.specialties.map((s) => (
-                    <div>{s}</div>
-                  ))}
-                </td>
-                <td>{advocate.yearsOfExperience}</td>
-                <td>{advocate.phoneNumber}</td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+      {filteredAdvocates.length > 0 && <AdvocatesTable advocates={filteredAdvocates}/>}
+
     </main>
   );
 }
