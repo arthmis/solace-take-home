@@ -74,7 +74,7 @@ export default function Home() {
   return (
     <main style={{ margin: "24px" }}>
       <h1 className="text-3xl font-bold pb-4 text-[#347866]">Welcome to Solace Advocates!</h1>
-      <div>
+      <div className="pb-4">
         <form className="flex flex-col gap-4" action={search}>
           <label htmlFor="specialties">Select the type of medical service you need help with (required)</label>
           <select className="select" value={selectedSpecialty} onChange={onChange} required name="specialties" id="specialties">
@@ -87,8 +87,6 @@ export default function Home() {
           <button className="btn btn-md bg-[#347866] text-white w-fit" type="submit">Find Care</button>
         </form>
       </div>
-      <br />
-      <br />
       {isLoadingFilteredAdvocates ? loading  : filteredAdvocatesTable }
 
     </main>
