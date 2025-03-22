@@ -1,6 +1,8 @@
 function AdvocatesTable({ advocates }) {
     return (
-        <table>
+        <div className="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
+
+        <table className="table">
             <thead>
                 <tr>
                     <th>First Name</th>
@@ -16,24 +18,25 @@ function AdvocatesTable({ advocates }) {
                 {advocates.map((advocate) => {
                     return (
                         <tr key={advocate.id}>
-                            <td>{advocate.firstName}</td>
-                            <td>{advocate.lastName}</td>
-                            <td>{advocate.city}</td>
-                            <td>{advocate.degree}</td>
-                            <td>
+                            <td className="align-top">{advocate.firstName}</td>
+                            <td className="align-top">{advocate.lastName}</td>
+                            <td className="align-top">{advocate.city}</td>
+                            <td className="align-top">{advocate.degree}</td>
+                            <td className="align-top">
                                 <ul>
                                     {advocate.specialties.map((s) => (
-                                        <li key={s}>{s}</li>
+                                        <li className="list-disc" key={s}>{s}</li>
                                     ))}
                                 </ul>
                             </td>
-                            <td>{advocate.yearsOfExperience}</td>
-                            <td>{advocate.phoneNumber}</td>
+                            <td className="align-top">{advocate.yearsOfExperience}</td>
+                            <td className="align-top">{advocate.phoneNumber}</td>
                         </tr>
                     );
                 })}
             </tbody>
         </table>
+        </div>
     )
 }
 
