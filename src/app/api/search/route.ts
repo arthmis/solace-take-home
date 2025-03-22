@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
     const data = await db.select().from(advocates).where(
       sql`jsonb_to_tsvector('english', ${advocates.specialties}, '["string"]') @@ websearch_to_tsquery('english', ${searchQuery})`
     );
-    return Response.json({data});
+    return Response.json({statusCode: 200, data});
   }
 
   return NextResponse.json({
