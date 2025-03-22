@@ -10,6 +10,7 @@
 - I used DaisyUI for the styling because it's easy to add and provides pleasant UI styling and sticks to semantic HTML for the most part.
 - better error handling if the server receives bad input
 - better display when a search doesn't return anything
+- assuming the data has hundreds of thousands of rows, I would also paginate the results and show only top 20 entries. How to determine the most relevant results is still up for design though
 
 ## Storage
 - probably would have the specialties in their own table instead of inside of a `jsonb` column
